@@ -1,0 +1,27 @@
+dialog::backdrop {
+    background: rgba(0, 0, 0, 0.1);
+}
+
+dialog {
+    background-color: rgb(159, 143, 143);
+    border: none;
+    border-radius: 20px;
+    height: 50vh;
+    width: min(500px, 50vw);
+    box-shadow: 0 0 10px -5px black;
+
+}
+dialog[open] {
+        display: flex;
+    flex-direction: column;
+}
+dialog img:hover {
+    cursor: pointer;
+    filter: drop-shadow(0 0 1px rgb(255, 255, 255));
+    transform: scale(1.2);
+}
+
+dialog img {
+    align-self: end;
+}
+
