@@ -1,15 +1,15 @@
 let myLibrary = [];
 
-function Book(title, author, pages, read, id) {
+function Book(title, author, pages, finishDate, id) {
   this.title = title;
   this.author = author;
   this.pages = pages;
-  this.read = read;
+  this.finishDate = finishDate;
   this.id = id;
 }
 
-function addBookToLibrary(title, author, pages, read, id) {
-  myLibrary.push(new Book(title, author, pages, read, id));
+function addBookToLibrary(title, author, pages, finishDate, id) {
+  myLibrary.push(new Book(title, author, pages, finishDate, id));
 }
 
 function renderLibrary() {
@@ -23,11 +23,13 @@ function renderLibrary() {
 const dialog = document.querySelector("dialog");
 const addBook = document.querySelector(".add-book");
 const close = document.querySelector("dialog img");
+const closeEdit = document.querySelector(".edit img");
 const books = document.querySelector(".books");
 const form = document.querySelector("form");
 form.addEventListener("submit", submit);
 
-addBookToLibrary("test", "Jusitn", 82, true, "id2");
+addBookToLibrary("The Hunger Games", "Suzanne Collins", 374, "10-3-21", "id");
+
 
 for(const book of myLibrary) {
     createBook(book);
@@ -46,6 +48,7 @@ function createBook(bookObject) {
   
   const edit = document.createElement("button");
   edit.textContent = "Edit";
+  edit.classList.add("edit-btn");
   bookBtns.appendChild(edit);
   
   const deleteBtn = new Image(15, 15);
@@ -67,28 +70,20 @@ function createBook(bookObject) {
   book.appendChild(bookHeader);
   const bookInfo = document.createElement("div");
   const authorDiv = document.createElement("div");
-  authorDiv.textContent = bookObject.author;
+  authorDiv.innerHTML = "Author:<br><strong>" + bookObject.author + "</strong>";
   bookInfo.appendChild(authorDiv);
   const pagesDiv = document.createElement("div");
-  pagesDiv.textContent = bookObject.pages;
+  pagesDiv.innerHTML = "Pages:<br><strong>" + bookObject.pages + "</strong>";
+  bookInfo.style.display = "flex";
+  bookInfo.style.flexDirection = "column"
+  bookInfo.style.gap = "10px";
   bookInfo.appendChild(pagesDiv);
   book.appendChild(bookInfo);
   const readDiv = document.createElement("div");
-  // const readLabel = document.createElement("label");
-  // const readBox = document.createElement("input");
-  // readBox.type = "checkbox";
-  // readLabel.textContent = "Read?";
-  // readLabel.setAttribute("for", "readBox");
-  // readBox.checked = bookObject.read;
-  bookObject.read ? readDiv.textContent = "Finished!" : readDiv.textContent = "Still reading..."
-  
-
-  
+  bookObject.finishDate !== "" ? readDiv.textContent = "Finished on " + bookObject.finishDate : readDiv.textContent = "Still reading..."
   book.appendChild(readDiv);
 
-
-  
-  // edit.addEventListener("click", editBook);
+  edit.addEventListener("click", () => editBook(bookObject));
   books.appendChild(book);
 }
 
@@ -99,9 +94,9 @@ function submit(event) { //creates a new book using the input from form
   const title = document.querySelector("#title").value;
   const author = document.querySelector("#author").value;
   const pages = document.querySelector("#pages").value;
-  const read = document.querySelector("#read").checked;
+  const finishDate = document.querySelector("#finish-date").value;
   const id = self.crypto.randomUUID();
-  addBookToLibrary(title, author, pages, read, id); //Adds to array
+  addBookToLibrary(title, author, pages, finishDate, id); //Adds to array
   console.log(myLibrary);
   createBook(myLibrary[myLibrary.length - 1]);
   dialog.close();
@@ -109,8 +104,21 @@ function submit(event) { //creates a new book using the input from form
   form.reset();
   event.preventDefault();
 }
+const edit = document.querySelector(".edit");
+function editBook (book) {
+  
+  const editTitle = document.querySelector("#edit-title");
+  const editAuthor = document.querySelector("#edit-author");
+  const editPages = document.querySelector("#edit-pages");
+  const editFinishDate = document.querySelector("#edit-finish-date");
+  editTitle.value = book.title;
+  editAuthor.value = book.author;
+  editPages.value = book.pages;
+  editFinishDate.value = book.finishDate;
 
 
+  edit.showModal();
+}
 
 addBook.addEventListener("click", () => {
     dialog.showModal();
@@ -118,6 +126,10 @@ addBook.addEventListener("click", () => {
 
 close.addEventListener("click", () => {
     dialog.close();
+});
+
+closeEdit.addEventListener("click", () => {
+    edit.close();
 })
 
 

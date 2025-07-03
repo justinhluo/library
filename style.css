@@ -16,8 +16,9 @@ body {
     flex-direction: column;
 
 }
+
 .header {
-    height: 20%;
+    height: 200px;
     background-color: bisque;
     display: flex;
     justify-content: center;
@@ -50,7 +51,8 @@ body {
 }
 
 dialog::backdrop {
-    background: rgba(0, 0, 0, 0.1);
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(3px);
 }
 
 dialog {
@@ -64,29 +66,33 @@ dialog {
     left: 50%;
     position: fixed;
     transform: translate(-50%, -50%);
+    
 
 }
-label:not(#read-label){
+label {
     display: block;
 }
+
 form {
     display: flex;
     flex-direction: column;
-    gap: 50px;
+    gap: 30px;
+    
 }
 .form-body {
     display: flex;
     flex-direction: column;
-    gap: 20px;
-    margin-left: 30px;
+    gap: 10px;
+    align-items: center;
 }
 
 #submit {
     align-self: center;
 }
 
-.add-book {
-    align-self: center;
+.add-book:hover {
+    cursor: pointer;
+    filter: drop-shadow(0 0 10px rgb(101, 236, 24));
 }
 .close-btn:hover, .delete-btn:hover{
     cursor: pointer;
@@ -107,14 +113,54 @@ form {
 }
 
 .title {
-   font-style: italic;
-   font-weight: bold;
-   align-self: center;
-   font-size: 2rem;
+    text-align: center;
+    font-style: italic;
+    font-weight: bold;
+    align-self: center;
+    font-size: 2rem;
 }
 
 .close-btn {
     align-self: end;
-    margin: 20px;
+    margin-top: 10px;
+    margin-right: 10px;
 }
 
+input:not(#submit) {
+    background-color: rgb(238, 238, 238);
+    width: 200px;
+    height: 30px;
+    border-radius: 10px;
+    padding-left: 5px;
+    border: none;
+    outline: 1px solid rgb(148, 236, 76);
+}
+
+#submit {
+    background-color: rgb(148, 236, 76);
+    border-radius: 10px;
+    padding: 10px 20px;
+}
+
+input[type = submit]:hover {
+    cursor: pointer;
+    transform: scale(1.1);
+}
+
+label p {
+    font-size: 0.7rem;
+}
+
+.edit-btn {
+    background-color: rgb(148, 236, 76);
+    border-radius: 10px;
+    width: 30px;
+    height: 20px;
+    font-size: 0.6rem;
+    border: none;
+}
+
+.edit-btn:hover {
+    cursor: pointer;
+    transform: scale(1.1);
+}
