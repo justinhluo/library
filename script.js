@@ -1,5 +1,21 @@
 let myLibrary = [];
 
+const editDialog = document.querySelector(".edit");
+const dialog = document.querySelector("dialog");
+const addBook = document.querySelector(".add-book");
+const close = document.querySelector("dialog img");
+const closeEdit = document.querySelector(".edit img");
+const books = document.querySelector(".books");
+const form = document.querySelector("form");
+form.addEventListener("submit", submit);
+const editForm = document.querySelector("#edit-form");
+const editTitle = document.querySelector("#edit-title");
+const editAuthor = document.querySelector("#edit-author");
+const editPages = document.querySelector("#edit-pages");
+const editFinishDate = document.querySelector("#edit-finish-date");
+editForm.addEventListener("submit", saveChanges);
+let bookBeingEdited = null;
+
 function Book(title, author, pages, finishDate, id) {
   this.title = title;
   this.author = author;
@@ -12,27 +28,49 @@ function addBookToLibrary(title, author, pages, finishDate, id) {
   myLibrary.push(new Book(title, author, pages, finishDate, id));
 }
 
+function saveLibrary() {
+  localStorage.setItem("myLibrary", JSON.stringify(myLibrary));
+}
+
+function loadLibrary() {
+  const data = localStorage.getItem("myLibrary");
+
+  if (data) {
+    const parsed = JSON.parse(data);
+    
+    // Only use saved data if it's not an empty array
+    if (parsed.length > 0) {
+      myLibrary = parsed.map(book => new Book(
+        book.title,
+        book.author,
+        book.pages,
+        book.finishDate,
+        book.id
+      ));
+    } else {
+      addSampleBooks();
+    }
+  } else {
+    addSampleBooks();
+  }
+}
+
+function addSampleBooks() {
+  addBookToLibrary("The Hunger Games", "Suzanne Collins", 374, "2021-01-24", "id-1");
+  addBookToLibrary("Pride and Prejudice", "Jane Austen", 432, "2020-12-04", "id-2");
+  addBookToLibrary("Brave New World", "Aldous Huxley", 288, "2019-04-21", "id-3");
+  saveLibrary();
+}
+
+loadLibrary();
+renderLibrary();
+
 function renderLibrary() {
   books.innerHTML = ""; // Clear existing books
 
   for (const book of myLibrary) {
     createBook(book);
   }
-}
-
-const dialog = document.querySelector("dialog");
-const addBook = document.querySelector(".add-book");
-const close = document.querySelector("dialog img");
-const closeEdit = document.querySelector(".edit img");
-const books = document.querySelector(".books");
-const form = document.querySelector("form");
-form.addEventListener("submit", submit);
-
-addBookToLibrary("The Hunger Games", "Suzanne Collins", 374, "10-3-21", "id");
-
-
-for(const book of myLibrary) {
-    createBook(book);
 }
 
 function createBook(bookObject) {
@@ -57,10 +95,10 @@ function createBook(bookObject) {
   bookBtns.appendChild(deleteBtn);
   
   deleteBtn.addEventListener("click", () => {
-    // books.removeChild(book);
     myLibrary = myLibrary.filter(book => book.id !== bookObject.id);
     renderLibrary();
-    console.log(myLibrary);
+    saveLibrary();
+
   });
   bookHeader.appendChild(bookBtns);
   const titleDiv = document.createElement("div");
@@ -80,14 +118,21 @@ function createBook(bookObject) {
   bookInfo.appendChild(pagesDiv);
   book.appendChild(bookInfo);
   const readDiv = document.createElement("div");
-  bookObject.finishDate !== "" ? readDiv.textContent = "Finished on " + bookObject.finishDate : readDiv.textContent = "Still reading..."
+  if (bookObject.finishDate !== "") {
+    const [year, month, day] = bookObject.finishDate.split("-");
+    const formattedDate = new Date(Number(year), Number(month) - 1, Number(day)).toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "short",
+      day: "numeric"
+    });
+    readDiv.textContent = "Finished on " + formattedDate;
+  } else {
+    readDiv.textContent = "Still reading...";
+  }
   book.appendChild(readDiv);
-
   edit.addEventListener("click", () => editBook(bookObject));
   books.appendChild(book);
 }
-
-
 
 function submit(event) { //creates a new book using the input from form
   
@@ -97,27 +142,30 @@ function submit(event) { //creates a new book using the input from form
   const finishDate = document.querySelector("#finish-date").value;
   const id = self.crypto.randomUUID();
   addBookToLibrary(title, author, pages, finishDate, id); //Adds to array
-  console.log(myLibrary);
+  saveLibrary();
   createBook(myLibrary[myLibrary.length - 1]);
   dialog.close();
   const form = document.querySelector("form");
   form.reset();
   event.preventDefault();
 }
-const edit = document.querySelector(".edit");
+function saveChanges(event) {
+  event.preventDefault();
+  bookBeingEdited.title =  editTitle.value;
+  bookBeingEdited.author = editAuthor.value;
+  bookBeingEdited.pages = editPages.value;
+  bookBeingEdited.finishDate = editFinishDate.value;
+  renderLibrary();
+  editDialog.close();
+  saveLibrary();
+}
 function editBook (book) {
-  
-  const editTitle = document.querySelector("#edit-title");
-  const editAuthor = document.querySelector("#edit-author");
-  const editPages = document.querySelector("#edit-pages");
-  const editFinishDate = document.querySelector("#edit-finish-date");
+  bookBeingEdited = book;
   editTitle.value = book.title;
   editAuthor.value = book.author;
   editPages.value = book.pages;
   editFinishDate.value = book.finishDate;
-
-
-  edit.showModal();
+  editDialog.showModal();
 }
 
 addBook.addEventListener("click", () => {
@@ -129,7 +177,7 @@ close.addEventListener("click", () => {
 });
 
 closeEdit.addEventListener("click", () => {
-    edit.close();
+    editDialog.close();
 })
 
 

@@ -12,18 +12,14 @@
 <body>
   <div class="header">
     <div>Welcome to your library! Add a book to get started </div>
-    <img src="/icons/book.png" alt="book" class="add-book">
+    <img src="/icons/book.png" alt="book" class="add-book" height="40px">
   </div>
   
   <div class="books">
-    <!-- <div class="book">
-      <div class="title"><em>The Hunger Games</em></div>
-      <div class="author">Suzanne Collins</div>
-      <div class="pages">123</div>
-      <div class="read">Read? <input type="checkbox"></div>
-    </div> -->
+
   </div>
     
+  <div class="footer">Made by <a href="https://github.com/justinhluo/library">Justin Luo</a>. Icons by <a href="https://icons8.com/">icons8.com</a>.</div>
 
   <dialog>
     <form action="" method="dialog">
@@ -51,7 +47,7 @@
   </dialog>
 
     <dialog class="edit">
-    <form action="" method="dialog">
+    <form action="" method="dialog" id="edit-form">
       <img src="icons/close.svg" alt="close" height="20px" class="close-btn">
         <div class="form-body">
           <div>
@@ -68,10 +64,10 @@
           </div>
           <div>
             <label for="edit-finish-date">Date finished:<p>(Leave blank if still reading)</p></label>
-            <input type="date" id="finish-date">
+            <input type="date" id="edit-finish-date">
           </div>
         </div>
-      <input type="submit" id="submit" value="Save Changes">
+      <input type="submit" id="save" value="Save Changes">
     </form>
   </dialog>
 
